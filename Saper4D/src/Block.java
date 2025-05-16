@@ -1,7 +1,7 @@
 
 
 public class Block {
-	Boolean isFlagged;
+	public Boolean isFlagged;
 	Boolean isBomb;
 	public Vector4D pos;
 	public int neighboursWithBombs;
@@ -21,6 +21,9 @@ public class Block {
 	public Boolean ifClicked()
 	{
 		return isClicked;
+	}
+	public void click() {
+		if(!isClicked) isClicked = true;
 	}
 	public void flag() 
 	{

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+// to do: repair setBombs, at bombs at all..., and add flags
 public class SaperMap {
 	private int state;
 	public int size;
@@ -11,7 +12,9 @@ public class SaperMap {
 	List<Vector4D> bombsList;
 	
 	
-	public SaperMap(){
+	public SaperMap(int newSize, int newBombs){
+		size = newSize;
+		bombs = newBombs;
 		saperMap = new Block[size][size][size][size];
 		clickedBlocks = new ArrayList<Vector4D>();
 		allBlocks = new ArrayList<Block>();
@@ -35,8 +38,12 @@ public class SaperMap {
 	}
 	
 	public boolean click(Vector4D vec) {
+		System.out.println(vec.x() + " " + vec.y() + " " + vec.z() + " " + vec.w());
 		Block blockRef = vecToBlock(vec);
-		if(blockRef.isClicked) clickedBlocks.add(vec);
+		if(!blockRef.isClicked) {
+			clickedBlocks.add(vec);
+			blockRef.click();
+		}
 		return !(blockRef.ifBomb());
 	}
 	
@@ -64,8 +71,8 @@ public class SaperMap {
 		}
 	}
 	
-	private Block vecToBlock(Vector4D vec){
-		return saperMap[vec.x()][vec.y()][vec.z()][vec.w()];
+	public Block vecToBlock(Vector4D vec){
+		return saperMap[vec.w()][vec.z()][vec.y()][vec.x()];
 	}
 	
 	private List<Block> getNeighbours(Block block){
