@@ -101,8 +101,8 @@ public class SaperMap {
 		externalFor:
 		for(int i = 0; i < bombs; i++)
 		{
-			Integer[] temp = new Integer[4];
-			for(Integer j : temp) j = (int)(Math.random() * size);
+			int[] temp = new int[4];
+			for(int j = 0; j < 4; j++) temp[j] = (int)(Math.random() * size);
 			for(Vector4D element : bombsLoc){
 				similarity = 0;
 				if(element.x() == temp[0]) similarity++;

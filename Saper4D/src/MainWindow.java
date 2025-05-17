@@ -160,7 +160,7 @@ public class MainWindow extends JFrame {
 					public void mouseClicked(MouseEvent me) {
 						Boolean bombDetected = saperMap.click(temp.blockRef.pos);
 						Update();
-						if(bombDetected) Lose();
+						if(!bombDetected) Lose();
 					}
 				});
 				
@@ -182,10 +182,13 @@ public class MainWindow extends JFrame {
 		
 	}
 	public void Lose() {
-		mapPanel.setEnabled(false);
+		for(BlockGraphic block : blocks) {
+			block.setEnabled(false);
+			block.setVisible(false);
+		}
 		control.setEnabled(false);
 		loserText = new JLabel("You lose");
-		contentPane.add(loserText);
+		mapPanel.add(loserText);
 	}
 
 }

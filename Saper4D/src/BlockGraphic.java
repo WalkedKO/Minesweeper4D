@@ -22,12 +22,12 @@ public class BlockGraphic extends JLabel{
 	}
 	public BlockGraphic(Block block) {
 		super();
-		System.out.println("created");
 		blockRef = block;
 		bombsText = new JLabel(Integer.toString(blockRef.neighboursWithBombs));
 		add(bombsText);
 		bombsText.setEnabled(false);
 		setIcon(unknown);
+		System.out.println(blockRef.neighboursWithBombs);
 	}
 	public void SetBlock(Block block) {
 		blockRef = block;
