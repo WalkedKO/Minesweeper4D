@@ -67,7 +67,10 @@ public class SaperMap {
 		Block blockRef = vecToBlock(vec);
 		List<Block> neighbours = getNeighbours(blockRef);
 		for(Block element : neighbours) {
-			if(element.neighboursWithBombs == 0 && !(blockRef.ifBomb())) fill(element.pos);
+			if(element.neighboursWithBombs == 0 && !(blockRef.ifBomb())) {
+				click(element.pos);
+				fill(element.pos);
+			}
 		}
 	}
 	

@@ -20,10 +20,18 @@ import javax.swing.JPasswordField;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.Box;
 import java.awt.GridLayout;
+import java.awt.Insets;
+
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 
 public class MainWindow extends JFrame {
 
@@ -34,7 +42,7 @@ public class MainWindow extends JFrame {
 	public int z;
 	public int w;
 	public static int size = 4;
-	JPanel mapPanel;
+	JPanel mapPanel, centerPanel;
 	JPanel control, Wpanel, Zpanel;
 	JLabel wLabel, zLabel;
 	JLabel loserText;
@@ -62,31 +70,32 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
-		saperMap = new SaperMap(4, 64);
+		saperMap = new SaperMap(size, size * 2);
 		z = 0;
 		w = 0;
 		currentPanel = saperMap.getPanel(z, w);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 945, 544);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		//setBounds(100, 100, 945, 544);
+		contentPane = new JPanel(new BorderLayout());
+		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-		
 		
 
 		mapPanel = new JPanel(new GridLayout(size, size, 0, 0));
-		mapPanel.setAlignmentX(0.8f);
-		//FlowLayout flowLayout_2 = (FlowLayout) mapPanel.getLayout();
-		contentPane.add(mapPanel);
+		mapPanel.setPreferredSize(new Dimension(BlockGraphic.iconSize * size, BlockGraphic.iconSize * size));
+		
+		centerPanel = new JPanel(new GridBagLayout());
+		centerPanel.add(mapPanel);
+		contentPane.add(centerPanel, BorderLayout.CENTER);
 
 		
 		control = new JPanel();
-		control.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		contentPane.add(control);
 		control.setLayout(new BoxLayout(control, BoxLayout.Y_AXIS));
+		contentPane.add(control, BorderLayout.EAST);
+
+		
 		
 		Wpanel = new JPanel();
 		control.add(Wpanel);
@@ -148,22 +157,34 @@ public class MainWindow extends JFrame {
 		
 		// my code
 		SpawnPanel(currentPanel);
+		
+		// Final window settings
+		pack(); 
+		setLocationRelativeTo(null); 
+		//setVisible(true);
 	}
 	public void SpawnPanel(Block[][] panel) {
 		blocks = new ArrayList<BlockGraphic>();
 		for(int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
+				//JLabel text = new JLabel(Integer.toString(panel[i][j].neighboursWithBombs));
 				BlockGraphic temp = new BlockGraphic(panel[i][j]);
+				//temp.add(text);
+				temp.setLayout(new BorderLayout());
+		        //text.setHorizontalAlignment(SwingConstants.CENTER);
+		        //text.setVerticalAlignment(SwingConstants.CENTER);
+		        //temp.add(text, BorderLayout.CENTER);
 				blocks.add(temp);
 				mapPanel.add(temp);
 				temp.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent me) {
-						Boolean bombDetected = saperMap.click(temp.blockRef.pos);
+						Boolean bombFree = true;
+						if(SwingUtilities.isRightMouseButton(me)) temp.blockRef.flag();
+						else bombFree = saperMap.click(temp.blockRef.pos);
 						Update();
-						if(!bombDetected) Lose();
+						if(!bombFree) Lose();
 					}
 				});
-				
 				
 			}
 		}
@@ -186,9 +207,10 @@ public class MainWindow extends JFrame {
 			block.setEnabled(false);
 			block.setVisible(false);
 		}
-		control.setEnabled(false);
+		control.setVisible(false);
+		mapPanel.setVisible(false);
 		loserText = new JLabel("You lose");
-		mapPanel.add(loserText);
+		contentPane.add(loserText);
 	}
 
 }

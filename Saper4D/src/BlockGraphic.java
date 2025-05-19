@@ -1,5 +1,8 @@
+import java.awt.Insets;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class BlockGraphic extends JLabel{
 
@@ -14,36 +17,43 @@ public class BlockGraphic extends JLabel{
 	public static ImageIcon bomb;
 	public static ImageIcon flag;
 	private ImageIcon curIcon;
-	private JLabel bombsText;
+	public static int iconSize;
 	static {
 		unknown = new ImageIcon("./images/unknown.png");
 		clicked = new ImageIcon("./images/clicked.png");
 		hover = new ImageIcon("./images/hover.png");
+		iconSize = unknown.getIconWidth();
 	}
 	public BlockGraphic(Block block) {
 		super();
 		blockRef = block;
-		bombsText = new JLabel(Integer.toString(blockRef.neighboursWithBombs));
-		add(bombsText);
-		bombsText.setEnabled(false);
 		setIcon(unknown);
 		System.out.println(blockRef.neighboursWithBombs);
+		
 	}
 	public void SetBlock(Block block) {
 		blockRef = block;
 		Update();
 	}
 	public void Update() {
-		bombsText.setText(Integer.toString(blockRef.neighboursWithBombs));
 		if(blockRef.ifClicked()) {
 			if(blockRef.ifBomb()) curIcon = bomb;
 			else {
 				curIcon = clicked;
-				bombsText.setEnabled(blockRef.neighboursWithBombs > 0);
+				if(blockRef.neighboursWithBombs > 0) {
+					setText(Integer.toString(blockRef.neighboursWithBombs));
+					setVerticalTextPosition(SwingConstants.CENTER);
+					setHorizontalTextPosition(SwingConstants.CENTER);
+				}
+				//setVerticalAlignment(SwingConstants.CENTER);
+				//setHorizontalAlignment(SwingConstants.CENTER);
 			}
 		}
 		else if(blockRef.isFlagged) curIcon = flag;
-		else curIcon = unknown;
+		else {
+			curIcon = unknown;
+			setText("");
+		}
 		setIcon(curIcon);
 	}
 
