@@ -22,6 +22,7 @@ public class BlockGraphic extends JLabel{
 		unknown = new ImageIcon("./images/unknown.png");
 		clicked = new ImageIcon("./images/clicked.png");
 		hover = new ImageIcon("./images/hover.png");
+		flag = new ImageIcon("./images/flag.png");
 		iconSize = unknown.getIconWidth();
 	}
 	public BlockGraphic(Block block) {

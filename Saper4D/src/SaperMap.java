@@ -44,6 +44,7 @@ public class SaperMap {
 			clickedBlocks.add(vec);
 			blockRef.click();
 		}
+		else fill(vec);
 		return !(blockRef.ifBomb());
 	}
 	
@@ -67,9 +68,11 @@ public class SaperMap {
 		Block blockRef = vecToBlock(vec);
 		List<Block> neighbours = getNeighbours(blockRef);
 		for(Block element : neighbours) {
-			if(element.neighboursWithBombs == 0 && !(blockRef.ifBomb())) {
+			if(!(element.ifBomb()) && !(element.ifClicked())) {
 				click(element.pos);
-				fill(element.pos);
+				if(element.neighboursWithBombs == 0) {
+					fill(element.pos);
+				}
 			}
 		}
 	}

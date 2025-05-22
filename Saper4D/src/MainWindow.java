@@ -41,15 +41,21 @@ public class MainWindow extends JFrame {
 	private Block[][] currentPanel;
 	public int z;
 	public int w;
+	
 	public static int size = 4;
+	public static int bombs = size * 2;
+	
 	JPanel mapPanel, centerPanel;
 	JPanel control, Wpanel, Zpanel;
-	JLabel wLabel, zLabel;
 	JLabel loserText;
 	
 	
 	
 	private List<BlockGraphic> blocks;
+	private JPanel labelPanel;
+	private JLabel wLabel;
+	private JLabel zLabel;
+	private JPanel buttonsPanel;
 	/**
 	 * Launch the application.
 	 */
@@ -70,7 +76,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
-		saperMap = new SaperMap(size, size * 2);
+		saperMap = new SaperMap(size, 10);
 		z = 0;
 		w = 0;
 		currentPanel = saperMap.getPanel(z, w);
@@ -92,17 +98,28 @@ public class MainWindow extends JFrame {
 
 		
 		control = new JPanel();
-		control.setLayout(new BoxLayout(control, BoxLayout.Y_AXIS));
+		control.setLayout(new BoxLayout(control, BoxLayout.X_AXIS));
 		contentPane.add(control, BorderLayout.EAST);
+		
+		labelPanel = new JPanel();
+		control.add(labelPanel);
+		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
+		
+		wLabel = new JLabel("W: 0");
+		labelPanel.add(wLabel);
+		
+		zLabel = new JLabel("Z: 0");
+		labelPanel.add(zLabel);
+		
+		buttonsPanel = new JPanel();
+		control.add(buttonsPanel);
+		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
 		
 		
 		Wpanel = new JPanel();
-		control.add(Wpanel);
+		buttonsPanel.add(Wpanel);
 		Wpanel.setLayout(new BoxLayout(Wpanel, BoxLayout.X_AXIS));
-		
-		wLabel = new JLabel("New label");
-		Wpanel.add(wLabel);
 		
 		JButton wDownButton = new JButton("-");
 		Wpanel.add(wDownButton);
@@ -111,7 +128,7 @@ public class MainWindow extends JFrame {
 				if(w == 0) return;
 				w--;
 				currentPanel = saperMap.getPanel(z,w);
-				Update();
+				UpdateMap();
 			}
 		});
 		
@@ -122,16 +139,13 @@ public class MainWindow extends JFrame {
 				if(w == size - 1) return;
 				w++;
 				currentPanel = saperMap.getPanel(z,w);
-				Update();
+				UpdateMap();
 			}
 		});
 		
 		Zpanel = new JPanel();
-		control.add(Zpanel);
+		buttonsPanel.add(Zpanel);
 		Zpanel.setLayout(new BoxLayout(Zpanel, BoxLayout.X_AXIS));
-		
-		zLabel = new JLabel("New label");
-		Zpanel.add(zLabel);
 		
 		JButton zDownButton = new JButton("-");
 		Zpanel.add(zDownButton);
@@ -140,7 +154,7 @@ public class MainWindow extends JFrame {
 				if(z == 0) return;
 				z--;
 				currentPanel = saperMap.getPanel(z,w);
-				Update();
+				UpdateMap();
 			}
 		});
 		
@@ -150,7 +164,7 @@ public class MainWindow extends JFrame {
 				if(z == size - 1) return;
 				z++;
 				currentPanel = saperMap.getPanel(z,w);
-				Update();
+				UpdateMap();
 			}
 		});
 		Zpanel.add(zUpButton);
@@ -181,25 +195,24 @@ public class MainWindow extends JFrame {
 						Boolean bombFree = true;
 						if(SwingUtilities.isRightMouseButton(me)) temp.blockRef.flag();
 						else bombFree = saperMap.click(temp.blockRef.pos);
-						Update();
+						UpdateMap();
 						if(!bombFree) Lose();
 					}
 				});
 				
 			}
 		}
-		Update();
+		UpdateMap();
 	}
-	public void Update() {
-		zLabel.setText("Z: " + Integer.toString(z));
-		wLabel.setText("W: " + Integer.toString(w));
+	public void UpdateMap() {
 		for(BlockGraphic block : blocks) {
 			Vector4D toCpy = block.blockRef.pos;
 			Vector4D posCpy = new Vector4D(toCpy.x(), toCpy.y(), z, w);
 			Block newBlock = saperMap.vecToBlock(posCpy);
 			block.SetBlock(newBlock);
 		}
-		
+		zLabel.setText("Z: " + Integer.toString(z));
+		wLabel.setText("W: " + Integer.toString(w));
 		
 	}
 	public void Lose() {
